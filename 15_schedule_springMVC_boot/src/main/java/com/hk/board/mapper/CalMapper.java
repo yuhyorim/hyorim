@@ -13,9 +13,11 @@ public interface CalMapper {
 	public int insertCalBoard(CalDto dto);
 	public List<CalDto> calBoardList(Map<String, String> map);
 	public boolean calMulDel(Map<String, String[]> map);
-	public 
+	public CalDto calBoardDetail(int seq);
+	public boolean calBoardUpdate(CalDto dto);
+	public List<CalDto> calViewList(Map<String, String> map);
+	public int calBoardCount(Map<String, String> map);
 }
-
 
 
 
