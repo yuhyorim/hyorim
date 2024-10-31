@@ -8,29 +8,69 @@
 <script type="text/javascript">
 
 </script>
+<link rel="stylesheet" href="css/login.css" />
 <style type="text/css">
+
+@charset "UTF-8";
+
+*{
+    padding: 0;
+    margin: 0;
+    border: none;
+}
+body{
+    background-color: gainsboro;
+    font-family: 'Roboto', sans-serif;
+}
+
+.login-wrapper{
+    width: 400px;
+    height: 1000px;
+    padding: 70px;
+    box-sizing: border-box;
+    margin: auto;
+    
+}
+
+.login-wrapper h1{
+    font-size: 50px;
+    font-weight: bold;
+    color: #ff0000;
+    margin-bottom: 20px;
+    margin-top: 150px;
+}
+
+.btn{
+    color: black;
+    font-size: 16px;
+    background-color: #ff0000;
+    margin-top: 20px;
+    box-sizing: border-box;
+}
+.form-control{
+	padding:20px;
+}
 
 </style>
 </head>
 <body>
 <div layout:fragment="content">
-<div id="container">
+<div id="login-wrapper" class="login-wrapper">
 <h1>LOGIN</h1>
-<form action="/user/login" method="post" th:object="${loginCommand}">
+<form action="/user/login" method="post" id="login-form" th:object="${loginCommand}">
 	<table class="table">
 		<tr>
-			<th>아이디:</th>
+			
 			<td>
-				<input type="text" class="form-control"
+				<input type="text" class="form-control" placeholder="아이디"
 				      name="id" th:field="*{id}" />
 				<span th:if="${#fields.hasErrors('id')}"
 				      th:errors="*{id}" class="errorField"></span>          
 			</td>
 		</tr>
 		<tr>
-			<th>패스워드:</th>
 			<td>
-				<input type="password" class="form-control"
+				<input type="password" class="form-control" placeholder="비밀번호"
 				      name="password" th:field="*{password}" />
 				<span th:if="${#fields.hasErrors('password')}"
 				      th:errors="*{password}" class="errorField"></span>      

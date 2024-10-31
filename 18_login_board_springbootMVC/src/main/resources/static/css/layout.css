@@ -2,30 +2,120 @@
 
 
 .content{
-	margin: 70px 150px;   
+   margin: 70px 150px;   
 }
 
 #container{
-		width: 1000px;
-		margin: 0 auto;
-	}
-	
+      width: 1000px;
+      margin: 0 auto;
+   }
+   
 /* footer요소 하단에 위치하는 코드 시작 --------*/
 /* footer요소가 항상 바닥에 위치하면서 페이지 내부가 길어지면 아래로 밀리면서 계속 하단에 위치 */
 
 #container {
    min-height: calc(90vh - 50px); /* 50px은 푸터 높이 */
 }
+.navbar-brand {
+        font-size: 20px; /* 글씨 크기 */
+        color: red; /* 글씨 색상 */
+        display: block; /* 블록 요소로 변경 */
+        text-align: center; /* 중앙 정렬 */
+    }
+
+    /* 나머지 링크 스타일 */
+    .nav {
+        list-style: none; /* 리스트 스타일 제거 */
+        padding: 0; /* 패딩 제거 */
+        display: flex; /* 플렉스 박스로 설정 */
+        justify-content: center; /* 중앙 정렬 */
+        margin-top: 20px; /* 위쪽 여백 */
+    }
+header {
+   background-color: black; /* 파란색 배경 */
+   color: white; /* 텍스트 색상 */
+   padding: 10px; /* 여백 */
+   text-align: center; /* 중앙 정렬 */
+   font-size:15px; /* 폰트 크기 */
+   text-align: center;
+   align-items: center;
+}
+
+.navbar-brand{
+   font-size: 30px;
+   font-weight: bold;
+}
+.header { /* 원하는 높이로 조정 */
+      height:100px;
+        background-color: black; /* 배경색 (필요에 따라 조정) */
+    }
+
+
+p{
+   margin-left: auto;
+   margin-top: 30px;
+   
+}
+
+a{
+   color:red;
+}
 
 #footer{
-	text-align: center;
-	color:white;
-	background-color: #3c3c3c;
-	line-height: 50px;
-	height: 50px;
+   text-align: center;
+   color:white;
+   background-color: #3c3c3c;
+   line-height: 50px;
+   height: 50px;
 }
-/* footer요소 하단에 위치하는 코드 종료--------*/	
+/* footer요소 하단에 위치하는 코드 종료--------*/   
 .errorField{
-	color : red;
-}	
+   color : red;
+}   
+
+.my_div{
+   width:700px;
+   height:500px;
+   border:solid;
+}
+
+.my_bg{
+   background-image: url("../img/puppy.png");
+   background-repeat: no-repeat;
+}
+
+/*달력 폼*/
+#ctitle {
+	text-align: center;
+	font-size: 20px;
+}
+
+.cal #thead > div {
+	text-align: center;
+}
+
+.cal #tbody > div{
+	height: 120px;
+	vertical-align: top;
+	border-top:1px solid gray;
+/* 	position: relative; */
+}
+/* 달력 내부에 div 박스들을 인라인요소처럼 옆으로 나열시키려고 설정*/
+.cal #thead > div, .cal #tbody > div{
+	display: inline-block; width: 140px;
+}
+.cal {width:1100px;}
+
+.pen{
+	width: 20px;
+	height: 20px;
+}
+
+
+#tbody div > p{
+	background-color: orange;
+	margin: 2px;
+	padding: 1px;
+	font-weight: bold;
+}
 
