@@ -32,7 +32,7 @@ public class WebMvcConfig implements WebMvcConfigurer{
 									,"/board/mulDel"
 									,"/board/boardUpdate"
 									,"/board/download"
-						            ,"/","/user/**","/css/**","/js/**");
+						            ,"/","/user/**","/css/**","/js/**","/img/**");
 	
 //		registry.addInterceptor(new LoginInterceptor())
 //		.order(2)

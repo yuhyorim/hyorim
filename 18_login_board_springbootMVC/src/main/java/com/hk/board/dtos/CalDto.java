@@ -10,6 +10,7 @@ public class CalDto {
 	private String content;
 	private String mdate;
 	private Date regdate;
+	private String goupId;
 
 	public CalDto() {
 		super();
@@ -74,11 +75,21 @@ public class CalDto {
 		this.regdate = regdate;
 	}
 
+	public String getGoupId() {
+		return goupId;
+	}
+
+	public void setGoupId(String goupId) {
+		this.goupId = goupId;
+	}
+
 	@Override
 	public String toString() {
 		return "CalDto [seq=" + seq + ", id=" + id + ", title=" + title + ", content=" + content + ", mdate=" + mdate
-				+ ", regdate=" + regdate + "]";
+				+ ", regdate=" + regdate + ", goupId=" + goupId + "]";
 	}
+
+	
 	
 	
 }

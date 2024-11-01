@@ -1,5 +1,7 @@
 package com.hk.board.command;
 
+import java.time.LocalDate;
+
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -25,18 +27,16 @@ public class InsertCalCommand {
 	@NotBlank(message = "일정내용을 입력하세요") //문자열만 가능
 	private String content;
 	
-	//mdate컬럼에 저장될 값 : 12자리로 조합해야 함
-	@NotNull(message = "년도를 입력하세요")
-	private int year;
-	@NotNull(message = "월을 입력하세요")
-	private int month;
-	@NotNull(message = "일을 입력하세요")
-	private int date;
-	@NotNull(message = "시간을 입력하세요")
+	@NotNull(message = "시작 날짜를 입력하세요") private LocalDate startDate; // 시작 날짜 필드 추가 
+	@NotNull(message = "종료 날짜를 입력하세요") private LocalDate endDate; // 종료 날짜 필드 추가
+	
 	private int hour;
 	@NotNull(message = "분을 입력하세요")
 	private int min;
+	private String groupId;
 	
+	
+
 	public InsertCalCommand() {
 		super();
 		// TODO Auto-generated constructor stub
@@ -44,17 +44,15 @@ public class InsertCalCommand {
 
 	public InsertCalCommand(int seq, @NotBlank(message = "아이디를 입력하세요") String id,
 			@NotBlank(message = "제목을 입력하세요") String title, @NotBlank(message = "일정내용을 입력하세요") String content,
-			@NotNull(message = "년도를 입력하세요") int year, @NotNull(message = "월을 입력하세요") int month,
-			@NotNull(message = "일을 입력하세요") int date, @NotNull(message = "시간을 입력하세요") int hour,
+			@NotNull(message = "시작 날짜를 입력하세요")LocalDate startDate, @NotNull(message = "종료 날짜를 입력하세요")LocalDate endDate, @NotNull(message = "시간을 입력하세요") int hour,
 			@NotNull(message = "분을 입력하세요") int min) {
 		super();
 		this.seq = seq;
 		this.id = id;
 		this.title = title;
 		this.content = content;
-		this.year = year;
-		this.month = month;
-		this.date = date;
+		this.startDate= startDate;
+		this.endDate= endDate;
 		this.hour = hour;
 		this.min = min;
 	}
@@ -91,28 +89,20 @@ public class InsertCalCommand {
 		this.content = content;
 	}
 
-	public int getYear() {
-		return year;
+	public LocalDate getStartDate() {
+		return startDate;
 	}
 
-	public void setYear(int year) {
-		this.year = year;
+	public void setStartDate(LocalDate startDate) {
+		this.startDate = startDate;
 	}
 
-	public int getMonth() {
-		return month;
+	public LocalDate getEndDate() {
+		return endDate;
 	}
 
-	public void setMonth(int month) {
-		this.month = month;
-	}
-
-	public int getDate() {
-		return date;
-	}
-
-	public void setDate(int date) {
-		this.date = date;
+	public void setEndDate(LocalDate endDate) {
+		this.endDate = endDate;
 	}
 
 	public int getHour() {
@@ -130,12 +120,24 @@ public class InsertCalCommand {
 	public void setMin(int min) {
 		this.min = min;
 	}
+	
+	public String getGroupId() {
+		return groupId;
+	}
+
+	public void setGroupId(String groupId) {
+		this.groupId = groupId;
+	}
 
 	@Override
 	public String toString() {
-		return "InsertCalCommand [seq=" + seq + ", id=" + id + ", title=" + title + ", content=" + content + ", year="
-				+ year + ", month=" + month + ", date=" + date + ", hour=" + hour + ", min=" + min + "]";
+		return "InsertCalCommand [seq=" + seq + ", id=" + id + ", title=" + title + ", content=" + content
+				+ ", startDate=" + startDate + ", endDate=" + endDate + ", hour=" + hour + ", min=" + min + ", groupId="
+				+ groupId + "]";
 	}
+
+	
+	
 	
 	
 }

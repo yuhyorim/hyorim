@@ -1,5 +1,8 @@
 package com.hk.board.controller;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -58,13 +61,20 @@ public class CalController {
 	
 	//일정추가 폼이동
 	@GetMapping("/addcalboardform")
-	public String addcalboardform(Model model,
-								  InsertCalCommand insertCalCommand) {
-		                        //입력폼 요청시에도 command객체를 보내야함
-		model.addAttribute("insertCalCommand", insertCalCommand);
-		
-		return "calboard/addcalboardform";
+	public String addcalboardform(Model model, InsertCalCommand insertCalCommand, @RequestParam(value = "date", required = false) String date) {
+	   System.out.println("data:"+insertCalCommand);
+		if (date != null && !date.isEmpty()) {
+	        try {
+	            LocalDate startDate = LocalDate.parse(date);
+	            insertCalCommand.setStartDate(startDate);
+	        } catch (DateTimeParseException e) {
+	            e.printStackTrace(); // 형식이 맞지 않을 경우 예외 처리
+	        }
+	    }
+	    model.addAttribute("insertCalCommand", insertCalCommand);
+	    return "calboard/addcalboardform";
 	}
+
 	
 	//일정 추가하기
 	//유효값처리: @Validated - 유효값처리에 사용할 객체에 선언
@@ -78,11 +88,10 @@ public class CalController {
 			return "calboard/addcalboardform";// 요청했던 페이지로 다시 이동
 		}
 		
-		// 일정추가하기 실행 코드 작성
+	
 		calService.insertCalBoard(insertCalCommand);
+		return "redirect:/schedule/calendar?year=" + insertCalCommand.getStartDate().getYear() + "&month=" + insertCalCommand.getStartDate().getMonthValue();
 		
-		return "redirect:/schedule/calendar?year="+insertCalCommand.getYear()
-												  +"&month="+insertCalCommand.getMonth();
 	}
 	
 	//일정목록보기
@@ -143,7 +152,7 @@ public class CalController {
 			
 			return "calboard/calboardlist";
 		}
-		
+		String groupId= request.getParameter("groupId");
 		calService.calMulDel(deleteCalCommand.getSeq());
 		
 		//-----수정했어요-----------

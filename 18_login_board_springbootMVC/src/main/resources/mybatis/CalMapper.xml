@@ -18,12 +18,11 @@
 	</select>
 	
 	<delete id="calMulDel" parameterType="Map">
-		DELETE FROM CALBOARD WHERE SEQ IN
-		<foreach collection="seqs" item="seq" open="(" close=")"
-		                                      separator="," >
-			#{seq}
-		</foreach>
+		DELETE FROM cal_board WHERE id = #{id} AND mdate BETWEEN #{startDate} AND #{endDate}
+		
 	</delete>
+	
+	<delete id="deleteCalBoardByGroupId" parameterType="string"> DELETE FROM cal_board WHERE group_id = #{groupId} </delete>
 	
 	<select id="calBoardDetail" parameterType="int" resultType="CalDto">      
 		SELECT SEQ, ID, TITLE, CONTENT, MDATE, REGDATE

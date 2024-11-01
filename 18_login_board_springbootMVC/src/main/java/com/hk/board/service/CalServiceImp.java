@@ -1,9 +1,13 @@
 package com.hk.board.service;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.hk.board.command.InsertCalCommand;
@@ -79,33 +83,34 @@ public class CalServiceImp {
 	}
 	
 	//controller에서는 insertCalCommand객체로 파라미터를 받음
-	public boolean insertCalBoard(InsertCalCommand insertCalCommand) {
-		// insertCalCommand 값      ---> CalDto로 옮겨 담기
-		// year,month,date,hour,min  ->  mdate
-		
-		//"202410181024"변환하는 작업
-		String mdate=insertCalCommand.getYear()
-				    +util.isTwo(insertCalCommand.getMonth()+"")
-					+util.isTwo(insertCalCommand.getDate()+"")
-					+util.isTwo(insertCalCommand.getHour()+"")
-					+util.isTwo(insertCalCommand.getMin()+"");
-		
+	public boolean insertCalBoard(InsertCalCommand insertCalCommand) { 
+		// startDate와 endDate를 가져옴 
+		LocalDate startDate = insertCalCommand.getStartDate(); 
+		LocalDate endDate = insertCalCommand.getEndDate(); 
+		String groupId = UUID.randomUUID().toString();
+		int count = 0; 
+		// startDate에서 endDate까지의 날짜를 모두 포함하는 일정 추가 로직 
+		for (LocalDate date = startDate; !date.isAfter(endDate);
+		date = date.plusDays(1)) { 
+			String mdate = date.format(DateTimeFormatter.ofPattern("yyyyMMdd")) + 
+					util.isTwo(String.valueOf(insertCalCommand.getHour())) + 
+					util.isTwo(String.valueOf(insertCalCommand.getMin())); 
 		// command --> dto 값 복사해서 넣는 작업
-		CalDto dto=new CalDto();
-		dto.setId(insertCalCommand.getId());
+		CalDto dto = new CalDto(); 
+		dto.setId(insertCalCommand.getId()); 
 		dto.setTitle(insertCalCommand.getTitle());
-		dto.setContent(insertCalCommand.getContent());
-		dto.setMdate(mdate);
+		dto.setContent(insertCalCommand.getContent()); 
+		dto.setMdate(mdate); 
+		dto.setGoupId(groupId);
 		
-		int count=calMapper.insertCalBoard(dto);
-		
-		//예외발생코드 추가
-//		if(count>0) {
-//			throw new Exception("일정추가 오류");
-//		}
-		
-		return count>0?true:false;
-	}
+		count += calMapper.insertCalBoard(dto); 
+		} 
+		// 예외 발생 코드 추가 
+		// if (count == 0) { 
+		// throw new Exception("일정추가 오류"); // } 
+		return count > 0; 
+		}
+	
 	
 	//일정목록보기
 	public List<CalDto> calBoardList(String id, Map<String,String> paramMap){
@@ -169,7 +174,15 @@ public class CalServiceImp {
 		return calMapper.calBoardCount(map);
 	}
 	
+	public boolean deleteCalBoardByGroupId(String groupId) {
+	    int count = calMapper.deleteCalBoardByGroupId(groupId);
+	    return count > 0;
+	}
+
+
+	
 }
+
 
 
 

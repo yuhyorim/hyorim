@@ -17,6 +17,7 @@ public interface CalMapper {
 	public boolean calBoardUpdate(CalDto dto);
 	public List<CalDto> calViewList(Map<String, String> map);
 	public int calBoardCount(Map<String, String> map);
+	public int deleteCalBoardByGroupId(String groupId);
 }
 
 
