@@ -3,6 +3,7 @@ package com.hk.board.service;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -87,8 +88,12 @@ public class CalServiceImp {
 		// startDate와 endDate를 가져옴 
 		LocalDate startDate = insertCalCommand.getStartDate(); 
 		LocalDate endDate = insertCalCommand.getEndDate(); 
-		String groupId = UUID.randomUUID().toString();
+		
+		//색깔 추가
+		String color = insertCalCommand.getColor();
 		int count = 0; 
+		boolean isTitleAdded = false;
+		
 		// startDate에서 endDate까지의 날짜를 모두 포함하는 일정 추가 로직 
 		for (LocalDate date = startDate; !date.isAfter(endDate);
 		date = date.plusDays(1)) { 
@@ -98,10 +103,19 @@ public class CalServiceImp {
 		// command --> dto 값 복사해서 넣는 작업
 		CalDto dto = new CalDto(); 
 		dto.setId(insertCalCommand.getId()); 
-		dto.setTitle(insertCalCommand.getTitle());
+		
+		//제목은 시작 날짜에만 추가
+		if (!isTitleAdded) {
+            dto.setTitle(insertCalCommand.getTitle());  // 시작 날짜에만 제목 추가
+            isTitleAdded = true;
+        } else {
+            dto.setTitle(" ");  // 다른 날짜에는 제목을 빈 값으로 설정
+        }
 		dto.setContent(insertCalCommand.getContent()); 
 		dto.setMdate(mdate); 
-		dto.setGoupId(groupId);
+		dto.setColor(color);//색깔 추가
+		
+		dto.setRegdate(new Date());
 		
 		count += calMapper.insertCalBoard(dto); 
 		} 
@@ -113,6 +127,7 @@ public class CalServiceImp {
 	
 	
 	//일정목록보기
+	
 	public List<CalDto> calBoardList(String id, Map<String,String> paramMap){
 		
 		//calendar에서 전달된 y,m,d 값을 8자리로 변환한다.
@@ -174,10 +189,7 @@ public class CalServiceImp {
 		return calMapper.calBoardCount(map);
 	}
 	
-	public boolean deleteCalBoardByGroupId(String groupId) {
-	    int count = calMapper.deleteCalBoardByGroupId(groupId);
-	    return count > 0;
-	}
+	
 
 
 	

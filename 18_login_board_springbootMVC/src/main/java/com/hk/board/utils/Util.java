@@ -42,9 +42,11 @@ public class Util {
 			// mdate: "202410181522" 12자리로 저장되어 있음
 			if(clist.get(j).getMdate().substring(6, 8).equals(d)) {
 				String ctitle=clist.get(j).getTitle();
-				calList+="<p>"
-						+(ctitle.length()>7?ctitle.substring(0, 7)+"..":ctitle)
-						+"</p>";
+				String color = clist.get(j).getColor();// 색깔 정보 가져오기
+				
+				  calList += "<p style='background-color:" + color + "; padding: 2px; border-radius: 10px;'>"
+		                    + (ctitle.length() > 7 ? ctitle.substring(0, 7) + ".." : ctitle)
+		                    + "</p>";
 			}
 		}
 		

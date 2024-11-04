@@ -5,10 +5,10 @@
 <mapper namespace="com.hk.board.mapper.CalMapper">
 	
 	<!-- id속성: mapper인터페이스의 메서드명과 일치 -->
-	<insert id="insertCalBoard" parameterType="CalDto">
-		INSERT INTO calboard
-		VALUES(NULL,#{id},#{title},#{content},#{mdate},SYSDATE())
-	</insert>
+<insert id="insertCalBoard" parameterType="CalDto">
+    INSERT INTO calboard (seq, id, title, content, mdate, color, regdate)
+    VALUES (NULL, #{id}, #{title}, #{content}, #{mdate}, #{color}, SYSDATE())
+</insert>
 	
 	<select id="calBoardList" parameterType="Map" resultType="CalDto">
 		SELECT SEQ, ID, TITLE, CONTENT, MDATE, REGDATE
@@ -16,13 +16,14 @@
 		WHERE SUBSTRING(MDATE,1,8) = #{yyyyMMdd}
 		AND ID=#{id}
 	</select>
-	
+
 	<delete id="calMulDel" parameterType="Map">
-		DELETE FROM cal_board WHERE id = #{id} AND mdate BETWEEN #{startDate} AND #{endDate}
-		
+		DELETE FROM CALBOARD
+		WHERE ID = #{id}
+		AND MDATE BETWEEN #{startDate} AND #{endDate}
 	</delete>
 	
-	<delete id="deleteCalBoardByGroupId" parameterType="string"> DELETE FROM cal_board WHERE group_id = #{groupId} </delete>
+	
 	
 	<select id="calBoardDetail" parameterType="int" resultType="CalDto">      
 		SELECT SEQ, ID, TITLE, CONTENT, MDATE, REGDATE
@@ -37,11 +38,13 @@
 		WHERE SEQ=#{seq}
 	</update>
 	
+	
+	<!-- 일정 색깔 가져오기 -color만 추가하면 됨. -->
 	<select id="calViewList" parameterType="Map" resultType="CalDto">
-		SELECT SEQ, ID, TITLE, CONTENT, MDATE, REGDATE
+		SELECT SEQ, ID, TITLE, CONTENT, MDATE, REGDATE, COLOR
 		FROM 
 			(SELECT ROW_NUMBER() OVER(PARTITION BY SUBSTR(MDATE,1,8)  ORDER BY MDATE) RN , 
-			       SEQ, ID, TITLE, CONTENT, MDATE, REGDATE
+			       SEQ, ID, TITLE, CONTENT, MDATE, REGDATE, COLOR
 			FROM CALBOARD
 			WHERE SUBSTRING(MDATE,1,6) = #{yyyyMM}
 			AND ID=#{id}) CAL

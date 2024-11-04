@@ -33,10 +33,13 @@ public class InsertCalCommand {
 	private int hour;
 	@NotNull(message = "분을 입력하세요")
 	private int min;
-	private String groupId;
 	
-	
+	//색깔 속성 추가
+	 @NotBlank(message = "색깔을 입력하세요")
+	 private String color; // 색깔 필드 추가
 
+	
+	
 	public InsertCalCommand() {
 		super();
 		// TODO Auto-generated constructor stub
@@ -55,6 +58,15 @@ public class InsertCalCommand {
 		this.endDate= endDate;
 		this.hour = hour;
 		this.min = min;
+		this.color=color;
+	}
+
+	public String getColor() {
+		return color;
+	}
+
+	public void setColor(String color) {
+		this.color = color;
 	}
 
 	public int getSeq() {
@@ -120,23 +132,13 @@ public class InsertCalCommand {
 	public void setMin(int min) {
 		this.min = min;
 	}
-	
-	public String getGroupId() {
-		return groupId;
-	}
-
-	public void setGroupId(String groupId) {
-		this.groupId = groupId;
-	}
 
 	@Override
 	public String toString() {
 		return "InsertCalCommand [seq=" + seq + ", id=" + id + ", title=" + title + ", content=" + content
-				+ ", startDate=" + startDate + ", endDate=" + endDate + ", hour=" + hour + ", min=" + min + ", groupId="
-				+ groupId + "]";
+				+ ", startDate=" + startDate + ", endDate=" + endDate + ", hour=" + hour + ", min=" + min + ", color="
+				+ color + "]";
 	}
-
-	
 	
 	
 	

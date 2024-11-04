@@ -10,14 +10,17 @@ public class CalDto {
 	private String content;
 	private String mdate;
 	private Date regdate;
-	private String goupId;
+	//색깔 추가
+	private String color;
+
+	
 
 	public CalDto() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
 
-	public CalDto(int seq, String id, String title, String content, String mdate, Date regdate) {
+	public CalDto(int seq, String id, String title, String content, String mdate, Date regdate, String color) {
 		super();
 		this.seq = seq;
 		this.id = id;
@@ -25,6 +28,7 @@ public class CalDto {
 		this.content = content;
 		this.mdate = mdate;
 		this.regdate = regdate;
+		this.color = color;
 	}
 
 	public int getSeq() {
@@ -74,22 +78,21 @@ public class CalDto {
 	public void setRegdate(Date regdate) {
 		this.regdate = regdate;
 	}
-
-	public String getGoupId() {
-		return goupId;
+	
+	public String getColor() {
+		return color;
 	}
 
-	public void setGoupId(String goupId) {
-		this.goupId = goupId;
+	public void setColor(String color) {
+		this.color = color;
 	}
 
 	@Override
 	public String toString() {
 		return "CalDto [seq=" + seq + ", id=" + id + ", title=" + title + ", content=" + content + ", mdate=" + mdate
-				+ ", regdate=" + regdate + ", goupId=" + goupId + "]";
+				+ ", regdate=" + regdate + ", color=" + color + "]";
 	}
 
-	
 	
 	
 }
