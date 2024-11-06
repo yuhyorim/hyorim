@@ -3,8 +3,10 @@ package com.hk.board.controller;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -35,6 +37,10 @@ public class BoardController {
 	private BoardService boardService;
 	@Autowired
 	private FileService fileService;
+	@Autowired
+	private ReservationService reservaitonservice;
+	
+	
 	
 	@GetMapping(value = "/boardList")
 	public String boardList(Model model) {
@@ -129,6 +135,17 @@ public class BoardController {
 		System.out.println("글삭제함");
 		return "redirect:/board/boardList";
 	}
+	
+	// 마이페이지로 이동하는 메서드
+    @GetMapping("/myPage")
+    public String goToMyPage(Model model) {
+        // 사용자의 예약 정보를 가져옵니다. 예를 들어, 현재 로그인한 사용자의 ID를 이용해 예약된 글 목록을 가져올 수 있습니다.
+        List<BoardDto> reservedBoards = ReservationService.getReservedBoardsForUser("user_id");  // user_id는 세션에서 가져오거나 로그인 정보로 대체
+
+        model.addAttribute("reservedBoards", reservedBoards);  // 예약된 글 목록을 모델에 추가
+        return "myPage";  // myPage.html 뷰로 리턴
+    }
+
 }
 
 

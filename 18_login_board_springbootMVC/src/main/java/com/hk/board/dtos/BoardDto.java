@@ -19,13 +19,16 @@ public class BoardDto {
 	//Join용 맴버필드
 	private List<FileBoardDto> fileBoardDto;
 	
+	 // 예약자 수 추가
+    private int reservationCount; 
+	
 	public BoardDto() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
 
 	public BoardDto(int board_seq, String id, String title, String content, Date regdate, String delflag,
-			List<FileBoardDto> fileBoardDto) {
+			List<FileBoardDto> fileBoardDto, int reservationCount) {
 		super();
 		this.board_seq = board_seq;
 		this.id = id;
@@ -34,6 +37,7 @@ public class BoardDto {
 		this.regdate = regdate;
 		this.delflag = delflag;
 		this.fileBoardDto = fileBoardDto;
+		this.reservationCount = reservationCount;
 	}
 
 	public int getBoard_seq() {
@@ -91,6 +95,14 @@ public class BoardDto {
 	public void setFileBoardDto(List<FileBoardDto> fileBoardDto) {
 		this.fileBoardDto = fileBoardDto;
 	}
+	
+	public int getReservationCount() {
+        return reservationCount;
+    }
+
+    public void setReservationCount(int reservationCount) {
+        this.reservationCount = reservationCount;
+    }
 
 	@Override
 	public String toString() {

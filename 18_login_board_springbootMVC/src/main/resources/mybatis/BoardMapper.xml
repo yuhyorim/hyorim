@@ -21,20 +21,25 @@
 	</resultMap>
 	
 	
-	<select id="getAllList" resultType="boardDto">
-		SELECT BOARD_SEQ, ID, TITLE, CONTENT, REGDATE
-		FROM TESTBOARD
-		WHERE DELFLAG = 'N'
-		ORDER BY REGDATE DESC
-	</select>
+	    <select id="getAllList" resultType="boardDto">
+        SELECT 
+            BOARD_SEQ, ID, TITLE, CONTENT, REGDATE,
+            (SELECT COUNT(*) FROM RESERVATIONS R WHERE R.BOARD_SEQ = B.BOARD_SEQ) AS RESERVATION_COUNT
+        FROM TESTBOARD B
+        WHERE DELFLAG = 'N'
+        ORDER BY REGDATE DESC
+    </select>
 	
-	<select id="getBoard" parameterType="Integer" resultMap="boardDtoMap">
-		SELECT B.BOARD_SEQ, B.ID, B.TITLE, B.CONTENT, B.REGDATE
-      	,F.FILE_SEQ, F.ORIGIN_FILENAME, F.STORED_FILENAME
-		FROM TESTBOARD B LEFT OUTER JOIN FILEINFO F
-		ON B.BOARD_SEQ = F.BOARD_SEQ
-		WHERE B.BOARD_SEQ = #{board_seq}
-	</select>
+	  <!-- 예약자 수를 포함해 게시글 상세보기 조회 -->
+    <select id="getBoard" parameterType="Integer" resultMap="boardDtoMap">
+        SELECT 
+            B.BOARD_SEQ, B.ID, B.TITLE, B.CONTENT, B.REGDATE,
+            (SELECT COUNT(*) FROM RESERVATIONS R WHERE R.BOARD_SEQ = B.BOARD_SEQ) AS RESERVATION_COUNT,
+            F.FILE_SEQ, F.ORIGIN_FILENAME, F.STORED_FILENAME
+        FROM TESTBOARD B 
+        LEFT OUTER JOIN FILEINFO F ON B.BOARD_SEQ = F.BOARD_SEQ
+        WHERE B.BOARD_SEQ = #{board_seq}
+    </select>
 	
 <!-- 	useGeneratedKeys="true" keyProperty="board_seq"
         : 증가된 board_seq값을 BoardDto에 전달 : insertBoard(boardDto) -->

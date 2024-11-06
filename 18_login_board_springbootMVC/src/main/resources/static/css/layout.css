@@ -103,6 +103,7 @@ a{
 /* 달력 내부에 div 박스들을 인라인요소처럼 옆으로 나열시키려고 설정*/
 .cal #thead > div, .cal #tbody > div{
 	display: inline-block; width: 140px;
+	
 }
 .cal {width:1100px;}
 
@@ -115,7 +116,7 @@ a{
 #tbody div > p{
 	background-color: rgb(128, 255, 128);
 	margin: 2px;
-	padding: 1px;
+	padding: 2px;
 	font-weight: bold;
 	min-height:25px;
 }

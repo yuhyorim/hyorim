@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>마이페이지</title>
+</head>
+<body>
+<h1>내가 예약한 게시글</h1>
+<table>
+    <tr>
+        <th>제목</th>
+        <th>작성자</th>
+        <th>작성일</th>
+    </tr>
+    <tr th:each="reservation : ${reservations}">
+        <td th:text="${reservation.title}"></td>
+        <td th:text="${reservation.author}"></td>
+        <td th:text="${reservation.createdAt}"></td>
+    </tr>
+</table>
+</body>
+</html>

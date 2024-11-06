@@ -18,9 +18,11 @@
 	</select>
 
 	<delete id="calMulDel" parameterType="Map">
-		DELETE FROM CALBOARD
-		WHERE ID = #{id}
-		AND MDATE BETWEEN #{startDate} AND #{endDate}
+		DELETE FROM CALBOARD WHERE SEQ IN
+		<foreach collection="seqs" item="seq" open="(" close=")"
+		                                      separator="," >
+			#{seq}
+		</foreach>
 	</delete>
 	
 	
