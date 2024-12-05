@@ -1,3 +1,4 @@
+package com.hk.board.service;
 import org.springframework.stereotype.Service;
 
 import com.hk.board.dtos.BoardDto;
@@ -17,6 +18,11 @@ public class ReservationService {
 
     @Autowired
     private ReservationMapper reservationMapper;
+    
+ // 예약자 수 조회
+    public int getReservationCount(int boardSeq) {
+        return reservationMapper.getReservationCount(boardSeq);
+    }
 
     // 게시글 목록 조회
     public List<BoardDto> getAllBoards() {

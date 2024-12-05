@@ -90,6 +90,16 @@ public class BoardService {
 	public boolean mulDel(String[] seqs) {
 		return boardMapper.mulDel(seqs);
 	}
+	
+	// 좋아요 수 조회
+    public int getLikeCount(int boardSeq) {
+        return boardMapper.getLikeCount(boardSeq);  // boardSeq로 좋아요 수 가져오기
+    }
+
+    // 좋아요 수 증가
+    public void incrementLikeCount(int boardSeq) {
+        boardMapper.incrementLikeCount(boardSeq);  // 좋아요 수 증가
+    }
 }
 
 

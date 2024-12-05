@@ -36,6 +36,7 @@
 			<th>작성자</th>
 			<th>제목</th>
 			<th>작성일</th>
+			<th>좋아요</th>
 		</tr>
 		<th:block th:if="${#lists.isEmpty(list)}">
 			<tr>
@@ -52,6 +53,7 @@
 					   th:text="${dto.title}"></a>
 				</td>
 				<td th:text="${#dates.format(dto.regdate,'yyyy-MM-dd')}"></td>
+				
 			</tr>
 		</th:block>
 		<tr>

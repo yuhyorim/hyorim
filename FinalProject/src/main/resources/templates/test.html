@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+<div th:each="item : ${list}">
+    <div th:text="${item.dutyName}"></div>
+    <div th:text="${item.dutyAddr}"></div>
+    <div th:text="${item.dutyMapimg}"></div>
+    <div th:text="${item.wgs84Lon}"></div>
+    <div th:text="${item.wgs84Lat}"></div>
+    <div th:text="${item.dutyTime1s}"></div>
+    <div th:text="${item.dutyTime1c}"></div>
+</div>
+</body>
+</html>

@@ -21,9 +21,10 @@
 	</resultMap>
 	
 	
+	
 	    <select id="getAllList" resultType="boardDto">
         SELECT 
-            BOARD_SEQ, ID, TITLE, CONTENT, REGDATE,
+            BOARD_SEQ, ID, TITLE, CONTENT, REGDATE,like_count AS likeCount
             (SELECT COUNT(*) FROM RESERVATIONS R WHERE R.BOARD_SEQ = B.BOARD_SEQ) AS RESERVATION_COUNT
         FROM TESTBOARD B
         WHERE DELFLAG = 'N'
@@ -62,6 +63,12 @@
 			#{board_seq}
 		</foreach>
 	</update>
+	
+	<update id="incrementLikeCount">
+    UPDATE board
+    SET like_count = like_count + 1
+    WHERE board_seq = #{boardSeq}
+</update>
 </mapper>
 
 

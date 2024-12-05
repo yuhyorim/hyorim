@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>My Reservations</title>
+</head>
+<body>
+    <h1>My Reservations</h1>
+    <div>
+        <table>
+            <thead>
+                <tr>
+                    <th>제목</th>
+                    <th>작성자</th>
+                    <th>작성일</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="board : ${reservedBoards}">
+                    <td th:text="${board.title}">제목</td>
+                    <td th:text="${board.id}">작성자</td>
+                    <td th:text="${#dates.format(board.regdate, 'yyyy-MM-dd')}">작성일</td>
+                    <td th:text="${board.reservationCount}">예약자 수:</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <button onclick="location.href='/board/boardList'">목록으로 돌아가기</button>
+</body>
+</html>

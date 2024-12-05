@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>KaKaoMap</title>
+  <style>
+    #map {
+      width: 1510px;
+      height: 645px;
+      margin-top: 20px;
+    }
+    .custom-control {
+      width: 40px;
+      height: 40px;
+      background-color: white;
+      border: 1px solid #ddd;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+      cursor: pointer;
+      background-image: url('../img/current location button.png'); /* 위치 이미지 */
+      background-size: cover;
+      background-position: center;
+    }
+    .custom-control:hover {
+      background-color: #f5f5f5;
+    }
+    #result {
+      margin-top: 10px;
+    }
+    button {
+      padding: 10px 20px;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 16px;
+    }
+    button:hover {
+      background-color: #45a049;
+    }
+  </style>
+</head>
+<body>
+<a href="javascript:void(0);" id="loadPlaces">place</a>
+
+<div style="display: flex;">
+  <!-- 약국 정보를 표시할 박스 -->
+  <div id="pharmacyInfo" style="width: 300px; height: 645px; border: 1px solid #ddd; padding: 10px; overflow-y: auto;">
+    <h3>약국 정보</h3>
+    <div id="infoContent">마커를 클릭하면 정보가 표시됩니다.</div>
+  </div>
+  <div id="map"></div>
+  <div id="result"></div>
+
+  <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=103eb0662b07ad2b9911998b5762d0f5&libraries=services"></script>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script type="text/javascript">
+    var container = document.getElementById('map'); // 지도를 담을 영역의 DOM 레퍼런스
+    var options = {
+      center: new kakao.maps.LatLng(37.525452, 126.888868),
+      level: 3
+    };
+
+    var map = new kakao.maps.Map(container, options); // 지도 생성 및 객체 리턴
+    var currentLocationMarker = null; // 현재 위치 마커 변수
+    var geocoder = new kakao.maps.services.Geocoder();
+    var clickMarker = null; // 클릭한 위치의 마커 변수
+    var currentLat = null, currentLng = null; // 현재 위치의 위도와 경도
+    var destLat = null, destLng = null; // 목적지 위도와 경도
+
+    // 현재 위치로 이동하는 함수
+    function moveToCurrentLocation() {
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+          function (position) {
+            currentLat = position.coords.latitude;
+            currentLng = position.coords.longitude;
+            var locPosition = new kakao.maps.LatLng(currentLat, currentLng);
+
+            // 마커 생성 또는 위치 갱신
+            if (currentLocationMarker) {
+              currentLocationMarker.setPosition(locPosition);
+            } else {
+              currentLocationMarker = new kakao.maps.Marker({
+                map: map,
+                position: locPosition
+              });
+            }
+
+            // 지도 중심 이동
+            map.setCenter(locPosition);
+            
+            function getFullRegionName(region1) {
+                 const regionMap = {
+                   "서울": "서울특별시",
+                   "부산": "부산광역시",
+                   "대구": "대구광역시",
+                   "인천": "인천광역시",
+                   "광주": "광주광역시",
+                   "대전": "대전광역시",
+                   "울산": "울산광역시",
+                   "세종": "세종특별자치시",
+                   "경기": "경기도",
+                   "강원": "강원도",
+                   "충북": "충청북도",
+                   "충남": "충청남도",
+                   "전북": "전라북도",
+                   "전남": "전라남도",
+                   "경북": "경상북도",
+                   "경남": "경상남도",
+                   "제주": "제주특별자치도"
+                 };
+
+                 return regionMap[region1] || region1; // 매칭되지 않으면 원래 값 반환
+               }
+            
+         // Reverse Geocoding: 위도, 경도를 주소로 변환
+            geocoder.coord2Address(currentLng, currentLat, function (result, status) {
+              if (status === kakao.maps.services.Status.OK) {
+                var fullAddress = result[0].address.address_name; // 전체 주소
+                var region1 = result[0].address.region_1depth_name; // 시도
+                var region2 = result[0].address.region_2depth_name; // 구/군
+
+                var fullRegion1 = getFullRegionName(region1);
+                
+                // AJAX 요청
+                $.ajax({
+                  url: "/map/region", // 서버 엔드포인트
+                  type: "POST",
+                  data: JSON.stringify({region1: fullRegion1, region2: region2 }), // JSON 데이터로 전송
+                  contentType: "application/json; charset=utf-8", // 헤더 설정
+                  datatype: "json",
+                  async: true,
+                  success: function (response) {
+                    console.log("응답 데이터:", response);
+                  },
+                  error: function (xhr, status, error) {
+                    console.error("AJAX 요청 실패:", error);
+                    alert("통신에 실패했습니다. 다시 시도하세요.");
+                  },
+                });
+
+                alert("주소: " + fullAddress); // 변환된 주소 출력
+              } else {
+                alert("주소 변환에 실패했습니다.");
+              }
+            });
+        },
+        function (error) {
+          alert("현재 위치를 가져올 수 없습니다. 오류: " + error.message);
+        },
+        { enableHighAccuracy: true }
+      );
+    } else {
+      alert("Geolocation을 지원하지 않는 브라우저입니다.");
+    }
+  }
+
+    // 클릭 이벤트로 목적지 설정
+    kakao.maps.event.addListener(map, 'click', function (mouseEvent) {
+      var latLng = mouseEvent.latLng;
+
+      // 기존 클릭 마커 삭제
+      if (clickMarker) {
+        clickMarker.setMap(null);
+      }
+
+      // 새 클릭 마커 생성
+      clickMarker = new kakao.maps.Marker({
+        position: latLng,
+        map: map
+      });
+
+      // 지도 중심 이동
+      map.panTo(latLng);
+
+      // 목적지 좌표 저장
+      destLat = latLng.getLat();
+      destLng = latLng.getLng();
+      
+      geocoder.coord2Address(destLng, destLat, function (result, status) {
+          if (status === kakao.maps.services.Status.OK) {
+            var address = result[0].address.address_name;
+            alert("마커 위치 주소는: " + address);
+          } else {
+            alert("주소 변환에 실패했습니다.");
+          }
+        });
+
+      // 길찾기 버튼 생성
+      var resultDiv = document.getElementById('result');
+      resultDiv.innerHTML = ''; // 기존 내용을 비웁니다.
+
+      if (currentLat && currentLng && destLat && destLng) {
+         var kakaoMapURL = `https://map.kakao.com/link/from/현재위치,${currentLat},${currentLng}/to/목적지,${destLat},${destLng}`;
+
+         var button = document.createElement('button');
+         button.innerText = '길찾기';
+         button.onclick = function () {
+           window.open(kakaoMapURL, '_blank');
+         };
+
+         resultDiv.appendChild(button); // 버튼 추가
+       } else {
+         alert("먼저 현재 위치를 설정하고 목적지를 선택하세요!");
+       }
+    });
+    
+    var placeList = /*[[${placeList}]]*/ [];
+
+    document.getElementById('loadPlaces').addEventListener('click', function () {
+        // AJAX 요청으로 약국 데이터 가져오기
+        $.ajax({
+            url: '/med', // 서버 엔드포인트
+            type: 'GET',
+            dataType: 'json',
+            success: function (response) {
+                // 약국 데이터 마커로 추가
+                response.forEach(function (place) {
+                    var markerPosition = new kakao.maps.LatLng(place.latitude, place.longitude);
+
+                    var marker = new kakao.maps.Marker({
+                        position: markerPosition,
+                        map: map
+                    });
+                    
+                 // 마커 클릭 이벤트 등록
+                    kakao.maps.event.addListener(marker, 'click', function () {
+                        // 서버에서 약국 세부 정보 가져오기
+                        $.ajax({
+                            url: `/med/${place.id}`, // 약국 ID를 기반으로 상세정보 요청
+                            type: 'GET',
+                            dataType: 'json',
+                            success: function (pharmacy) {
+                                // 약국 정보를 박스에 표시
+                                var infoContent =` <p><strong>이름:</strong> ${placeDto.dutyName}</p>
+                                    <p><strong>주소:</strong> ${placeDto.dutyAddr}</p>
+                                    <p><strong>운영 시간:</strong> ${placeDto.startTime} ~ ${placeDto.endTime}</p>
+                                    `;
+                                document.getElementById('infoContent').innerHTML = infoContent;
+                            },
+                            error: function (xhr, status, error) {
+                                console.error("상세 정보 요청 실패:", status, error);
+                                alert("약국 정보를 가져오는 데 실패했습니다.");
+                            }
+                        });
+                    });
+
+                    // 인포윈도우 추가
+                    var infowindow = new kakao.maps.InfoWindow({
+                        content: `<div style="padding:5px;">${place.name}</div>`
+                    });
+
+                    kakao.maps.event.addListener(marker, 'mouseover', function () {
+                        infowindow.open(map, marker);
+                    });
+
+                    kakao.maps.event.addListener(marker, 'mouseout', function () {
+                        infowindow.close();
+                    });
+                });
+            },
+            error: function (xhr, status, error) {
+                console.error("AJAX 요청 실패:", status, error);
+                console.error("응답 상태 코드:", xhr.status);
+                console.error("응답 메시지:", xhr.responseText);
+                alert("약국 데이터를 불러오는 데 실패했습니다.");
+            }
+        });
+    });
+
+    // 페이지 로드 시 현재 위치로 이동
+    moveToCurrentLocation();
+
+    // 현재 위치 버튼 생성
+    var customControl = document.createElement('div');
+    customControl.className = 'custom-control';
+    customControl.onclick = moveToCurrentLocation;
+
+    // 지도에 현재 위치 버튼 추가
+    map.addControl(customControl, kakao.maps.ControlPosition.BOTTOMRIGHT);
+
+    // 줌 컨트롤 추가
+    var zoomControl = new kakao.maps.ZoomControl();
+    map.addControl(zoomControl, kakao.maps.ControlPosition.RIGHT);
+  </script>
+</body>
+</html>

@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+<div th:each="item : ${list}">
+	<div th:text="${item.dutyName}"></div>
+	<div th:text="${item.dutyAddr}"></div>
+	<div th:text="${item.longitude}"></div>
+    <div th:text="${item.latitude}"></div>
+    
+</div>
+</body>
+</html>

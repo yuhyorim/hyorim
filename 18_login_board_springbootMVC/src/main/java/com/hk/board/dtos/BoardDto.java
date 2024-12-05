@@ -15,12 +15,13 @@ public class BoardDto {
 	private String content;
 	private Date regdate;
 	private String delflag;
+	private int likeCount; // 좋아요 수 필드 추가
+
 	
 	//Join용 맴버필드
 	private List<FileBoardDto> fileBoardDto;
 	
-	 // 예약자 수 추가
-    private int reservationCount; 
+
 	
 	public BoardDto() {
 		super();
@@ -37,8 +38,6 @@ public class BoardDto {
 		this.regdate = regdate;
 		this.delflag = delflag;
 		this.fileBoardDto = fileBoardDto;
-		this.reservationCount = reservationCount;
-	}
 
 	public int getBoard_seq() {
 		return board_seq;
@@ -96,19 +95,22 @@ public class BoardDto {
 		this.fileBoardDto = fileBoardDto;
 	}
 	
-	public int getReservationCount() {
-        return reservationCount;
-    }
+	
+	public int getLikeCount() {
+		return likeCount;
+	}
 
-    public void setReservationCount(int reservationCount) {
-        this.reservationCount = reservationCount;
-    }
+	public void setLikeCount(int likeCount) {
+		this.likeCount = likeCount;
+	}
 
 	@Override
 	public String toString() {
 		return "BoardDto [board_seq=" + board_seq + ", id=" + id + ", title=" + title + ", content=" + content
-				+ ", regdate=" + regdate + ", delflag=" + delflag + ", fileBoardDto=" + fileBoardDto + "]";
+				+ ", regdate=" + regdate + ", delflag=" + delflag + ", likeCount=" + likeCount + ", fileBoardDto="
+				+ fileBoardDto + "]";
 	}
+
 	
 	
 	

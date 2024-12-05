@@ -25,18 +25,11 @@ public interface BoardMapper {
     // 글 삭제
     boolean mulDel(String[] seqs);
 
-    // 예약 추가
-    boolean insertReservation(@Param("boardSeq") int boardSeq, @Param("userId") String userId);
+    // 좋아요 수 조회
+    int getLikeCount(int boardSeq);
 
-    // 예약자 수 조회
-    int getReservationCount(int boardSeq);
-
-    // 사용자가 예약한 게시글 목록 조회 (마이페이지에서 사용)
-    List<BoardDto> getReservedBoardsByUser(String userId);
-    
-    // 예약자 수 업데이트
-    void updateReservationCount(@Param("boardSeq") int boardSeq, @Param("reservationCount") int reservationCount);
-
+    // 좋아요 수 증가
+    void incrementLikeCount(int boardSeq);
 }
 
 

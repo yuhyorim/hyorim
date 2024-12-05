@@ -12,9 +12,11 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartRequest;
 
@@ -25,9 +27,11 @@ import com.hk.board.dtos.BoardDto;
 import com.hk.board.dtos.FileBoardDto;
 import com.hk.board.service.BoardService;
 import com.hk.board.service.FileService;
+import com.hk.board.service.ReservationService;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 
 @Controller
 @RequestMapping(value = "/board")
@@ -79,9 +83,12 @@ public class BoardController {
 	@GetMapping(value = "/boardDetail")
 	public String boardDetail(int board_seq, Model model) {
 		BoardDto dto=boardService.getBoard(board_seq);
+		int reservationCount =reservaitonservice.getReservationCount(board_seq);
 		
 		//유효값처리용
 		model.addAttribute("updateBoardCommand", new UpdateBoardCommand());
+		//예약자수 모델에 추가
+		model.addAttribute("reservationCount", reservationCount);
 		//출력용
 		model.addAttribute("dto", dto);
 		System.out.println(dto);
@@ -136,15 +143,15 @@ public class BoardController {
 		return "redirect:/board/boardList";
 	}
 	
-	// 마이페이지로 이동하는 메서드
-    @GetMapping("/myPage")
-    public String goToMyPage(Model model) {
-        // 사용자의 예약 정보를 가져옵니다. 예를 들어, 현재 로그인한 사용자의 ID를 이용해 예약된 글 목록을 가져올 수 있습니다.
-        List<BoardDto> reservedBoards = ReservationService.getReservedBoardsForUser("user_id");  // user_id는 세션에서 가져오거나 로그인 정보로 대체
-
-        model.addAttribute("reservedBoards", reservedBoards);  // 예약된 글 목록을 모델에 추가
-        return "myPage";  // myPage.html 뷰로 리턴
+	 // 좋아요 버튼 클릭 시 좋아요 수 증가
+    @PostMapping("/like/{boardSeq}")
+    public String likeBoard(@PathVariable("boardSeq") int boardSeq) {
+        boardService.incrementLikeCount(boardSeq);  // 좋아요 수 증가
+        return "redirect:/board/boardList";  // 게시글 목록으로 리다이렉트
     }
+
+	
+   
 
 }
 
