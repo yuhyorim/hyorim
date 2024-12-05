@@ -43,12 +43,6 @@
 <body>
 <a href="javascript:void(0);" id="loadPlaces">place</a>
 
-<div style="display: flex;">
-  <!-- 약국 정보를 표시할 박스 -->
-  <div id="pharmacyInfo" style="width: 300px; height: 645px; border: 1px solid #ddd; padding: 10px; overflow-y: auto;">
-    <h3>약국 정보</h3>
-    <div id="infoContent">마커를 클릭하면 정보가 표시됩니다.</div>
-  </div>
   <div id="map"></div>
   <div id="result"></div>
 
@@ -222,28 +216,6 @@
                     var marker = new kakao.maps.Marker({
                         position: markerPosition,
                         map: map
-                    });
-                    
-                 // 마커 클릭 이벤트 등록
-                    kakao.maps.event.addListener(marker, 'click', function () {
-                        // 서버에서 약국 세부 정보 가져오기
-                        $.ajax({
-                            url: `/med/${place.id}`, // 약국 ID를 기반으로 상세정보 요청
-                            type: 'GET',
-                            dataType: 'json',
-                            success: function (pharmacy) {
-                                // 약국 정보를 박스에 표시
-                                var infoContent =` <p><strong>이름:</strong> ${placeDto.dutyName}</p>
-                                    <p><strong>주소:</strong> ${placeDto.dutyAddr}</p>
-                                    <p><strong>운영 시간:</strong> ${placeDto.startTime} ~ ${placeDto.endTime}</p>
-                                    `;
-                                document.getElementById('infoContent').innerHTML = infoContent;
-                            },
-                            error: function (xhr, status, error) {
-                                console.error("상세 정보 요청 실패:", status, error);
-                                alert("약국 정보를 가져오는 데 실패했습니다.");
-                            }
-                        });
                     });
 
                     // 인포윈도우 추가

@@ -64,6 +64,9 @@ public class PlaceController {
             jsonNode.get("body").get("items").get("item").toString(),
             new TypeReference<List<PlaceDto>>() {}
         );
+        
+        
+        
 
         return ResponseEntity.ok(placeList);
     }
