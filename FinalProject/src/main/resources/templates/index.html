@@ -38,11 +38,25 @@
     button:hover {
       background-color: #45a049;
     }
+    
+    /* 약국 정보 표시 영역 */
+#info-container {
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background-color: #f9f9f9;
+    width: 300px;
+    margin-top: 20px;
+}
   </style>
 </head>
 <body>
 <a href="javascript:void(0);" id="loadPlaces">place</a>
+<a href="javascript:void(0);" id="egypt">egypt</a>
 
+<div id="info-container">
+    <!-- 여기에 약국 정보를 표시 -->
+</div>
   <div id="map"></div>
   <div id="result"></div>
 
@@ -83,62 +97,6 @@
 
             // 지도 중심 이동
             map.setCenter(locPosition);
-            
-            function getFullRegionName(region1) {
-                 const regionMap = {
-                   "서울": "서울특별시",
-                   "부산": "부산광역시",
-                   "대구": "대구광역시",
-                   "인천": "인천광역시",
-                   "광주": "광주광역시",
-                   "대전": "대전광역시",
-                   "울산": "울산광역시",
-                   "세종": "세종특별자치시",
-                   "경기": "경기도",
-                   "강원": "강원도",
-                   "충북": "충청북도",
-                   "충남": "충청남도",
-                   "전북": "전라북도",
-                   "전남": "전라남도",
-                   "경북": "경상북도",
-                   "경남": "경상남도",
-                   "제주": "제주특별자치도"
-                 };
-
-                 return regionMap[region1] || region1; // 매칭되지 않으면 원래 값 반환
-               }
-            
-         // Reverse Geocoding: 위도, 경도를 주소로 변환
-            geocoder.coord2Address(currentLng, currentLat, function (result, status) {
-              if (status === kakao.maps.services.Status.OK) {
-                var fullAddress = result[0].address.address_name; // 전체 주소
-                var region1 = result[0].address.region_1depth_name; // 시도
-                var region2 = result[0].address.region_2depth_name; // 구/군
-
-                var fullRegion1 = getFullRegionName(region1);
-                
-                // AJAX 요청
-                $.ajax({
-                  url: "/map/region", // 서버 엔드포인트
-                  type: "POST",
-                  data: JSON.stringify({region1: fullRegion1, region2: region2 }), // JSON 데이터로 전송
-                  contentType: "application/json; charset=utf-8", // 헤더 설정
-                  datatype: "json",
-                  async: true,
-                  success: function (response) {
-                    console.log("응답 데이터:", response);
-                  },
-                  error: function (xhr, status, error) {
-                    console.error("AJAX 요청 실패:", error);
-                    alert("통신에 실패했습니다. 다시 시도하세요.");
-                  },
-                });
-
-                alert("주소: " + fullAddress); // 변환된 주소 출력
-              } else {
-                alert("주소 변환에 실패했습니다.");
-              }
-            });
         },
         function (error) {
           alert("현재 위치를 가져올 수 없습니다. 오류: " + error.message);
@@ -150,97 +108,143 @@
     }
   }
 
-    // 클릭 이벤트로 목적지 설정
-    kakao.maps.event.addListener(map, 'click', function (mouseEvent) {
-      var latLng = mouseEvent.latLng;
+//     // 클릭 이벤트로 목적지 설정
+//     kakao.maps.event.addListener(map, 'click', function (mouseEvent) {
+//       var latLng = mouseEvent.latLng;
 
-      // 기존 클릭 마커 삭제
-      if (clickMarker) {
-        clickMarker.setMap(null);
-      }
+//       // 기존 클릭 마커 삭제
+//       if (clickMarker) {
+//         clickMarker.setMap(null);
+//       }
 
-      // 새 클릭 마커 생성
-      clickMarker = new kakao.maps.Marker({
-        position: latLng,
-        map: map
-      });
+//       // 새 클릭 마커 생성
+//       clickMarker = new kakao.maps.Marker({
+//         position: latLng,
+//         map: map
+//       });
 
-      // 지도 중심 이동
-      map.panTo(latLng);
+//       // 지도 중심 이동
+//       map.panTo(latLng);
 
-      // 목적지 좌표 저장
-      destLat = latLng.getLat();
-      destLng = latLng.getLng();
+//       // 목적지 좌표 저장
+//       destLat = latLng.getLat();
+//       destLng = latLng.getLng();
       
-      geocoder.coord2Address(destLng, destLat, function (result, status) {
-          if (status === kakao.maps.services.Status.OK) {
-            var address = result[0].address.address_name;
-            alert("마커 위치 주소는: " + address);
-          } else {
-            alert("주소 변환에 실패했습니다.");
-          }
-        });
+//       geocoder.coord2Address(destLng, destLat, function (result, status) {
+//           if (status === kakao.maps.services.Status.OK) {
+//             var address = result[0].address.address_name;
+//             alert("마커 위치 주소는: " + address);
+//           } else {
+//             alert("주소 변환에 실패했습니다.");
+//           }
+//         });
 
-      // 길찾기 버튼 생성
-      var resultDiv = document.getElementById('result');
-      resultDiv.innerHTML = ''; // 기존 내용을 비웁니다.
+//       // 길찾기 버튼 생성
+//       var resultDiv = document.getElementById('result');
+//       resultDiv.innerHTML = ''; // 기존 내용을 비웁니다.
 
-      if (currentLat && currentLng && destLat && destLng) {
-         var kakaoMapURL = `https://map.kakao.com/link/from/현재위치,${currentLat},${currentLng}/to/목적지,${destLat},${destLng}`;
+//       if (currentLat && currentLng && destLat && destLng) {
+//          var kakaoMapURL = `https://map.kakao.com/link/from/현재위치,${currentLat},${currentLng}/to/목적지,${destLat},${destLng}`;
 
-         var button = document.createElement('button');
-         button.innerText = '길찾기';
-         button.onclick = function () {
-           window.open(kakaoMapURL, '_blank');
-         };
+//          var button = document.createElement('button');
+//          button.innerText = '길찾기';
+//          button.onclick = function () {
+//            window.open(kakaoMapURL, '_blank');
+//          };
 
-         resultDiv.appendChild(button); // 버튼 추가
-       } else {
-         alert("먼저 현재 위치를 설정하고 목적지를 선택하세요!");
-       }
-    });
+//          resultDiv.appendChild(button); // 버튼 추가
+//        } else {
+//          alert("먼저 현재 위치를 설정하고 목적지를 선택하세요!");
+//        }
+//     });
     
     var placeList = /*[[${placeList}]]*/ [];
 
+    var clickMarker = null; // 클릭한 마커 변수
+    var destLat = null, destLng = null; // 목적지 좌표 변수
+
+    // 마커 클릭 이벤트와 길찾기 로직 추가
     document.getElementById('loadPlaces').addEventListener('click', function () {
-        // AJAX 요청으로 약국 데이터 가져오기
-        $.ajax({
-            url: '/med', // 서버 엔드포인트
-            type: 'GET',
-            dataType: 'json',
-            success: function (response) {
-                // 약국 데이터 마커로 추가
-                response.forEach(function (place) {
-                    var markerPosition = new kakao.maps.LatLng(place.latitude, place.longitude);
+    // AJAX 요청으로 약국 데이터 가져오기
+       $.ajax({
+           url: '/map/med', // 서버 엔드포인트
+           type: 'GET',
+           dataType: 'json',
+           success: function (response) {
+               console.log(response);
+               // 약국 데이터 마커로 추가
+               response.forEach(function (place) {
+                   var markerPosition = new kakao.maps.LatLng(place.latitude, place.longitude);
+   
+                   var marker = new kakao.maps.Marker({
+                       position: markerPosition,
+                       map: map
+                   });
+   
+                   // 인포윈도우 추가
+                   var infowindow = new kakao.maps.InfoWindow({
+                       content: `<div style="padding:5px;">${place.dutyName}</div>`
+                   });
+   
+                   kakao.maps.event.addListener(marker, 'mouseover', function () {
+                       infowindow.open(map, marker);
+                   });
+   
+                   kakao.maps.event.addListener(marker, 'mouseout', function () {
+                       infowindow.close();
+                   });
+   
+                   // 클릭 이벤트 추가
+                   kakao.maps.event.addListener(marker, 'click', function () {
+                       // 클릭 시 약국 이름 전송
+                       $.ajax({
+                           url: '/map/sPName', // 약국 이름을 전송할 서버 엔드포인트
+                           type: 'GET',
+                           contentType: 'application/json',
+                           data: { dutyName: place.dutyName }, // 약국 이름 데이터
+                           success: function (response) {
+                               console.log('서버로 약국 이름 전송 성공:', response);
+                               
+                               // 데이터가 성공적으로 도착했으면 화면에 표시
+                               const infoContainer = document.getElementById('info-container');
+                               infoContainer.innerHTML = ''; // 기존 내용을 지움
 
-                    var marker = new kakao.maps.Marker({
-                        position: markerPosition,
-                        map: map
-                    });
+                               response.forEach(place => {
+                                   const infoBox = document.createElement('div');
+                                   infoBox.className = 'info-box';
+                                   infoBox.innerHTML = `
+                                       <h4>${place.dutyName}</h4>
+                                       <p>${place.dutyAddr}</p>
+                                   `;
+                                   infoContainer.appendChild(infoBox);
+                               });
+                               
+                               
+                               alert(`${place.dutyName} 정보를 성공적으로 전송했습니다!`);
+                           },
+                           error: function (xhr, status, error) {
+                               console.error("클릭 이벤트 AJAX 요청 실패:", status, error);
+                               console.error("응답 상태 코드:", xhr.status);
+                               console.error("응답 메시지:", xhr.responseText);
+                               alert("약국 이름 전송에 실패했습니다.");
+                           }
+                       });
+                   });
+               });
+           },
+           error: function (xhr, status, error) {
+               console.error("AJAX 요청 실패:", status, error);
+               console.error("응답 상태 코드:", xhr.status);
+               console.error("응답 메시지:", xhr.responseText);
+               alert("약국 데이터를 불러오는 데 실패했습니다.");
+           }
+       });
+   });
 
-                    // 인포윈도우 추가
-                    var infowindow = new kakao.maps.InfoWindow({
-                        content: `<div style="padding:5px;">${place.name}</div>`
-                    });
 
-                    kakao.maps.event.addListener(marker, 'mouseover', function () {
-                        infowindow.open(map, marker);
-                    });
 
-                    kakao.maps.event.addListener(marker, 'mouseout', function () {
-                        infowindow.close();
-                    });
-                });
-            },
-            error: function (xhr, status, error) {
-                console.error("AJAX 요청 실패:", status, error);
-                console.error("응답 상태 코드:", xhr.status);
-                console.error("응답 메시지:", xhr.responseText);
-                alert("약국 데이터를 불러오는 데 실패했습니다.");
-            }
-        });
-    });
-
+    
+    
     // 페이지 로드 시 현재 위치로 이동
     moveToCurrentLocation();
 
